@@ -3,28 +3,26 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/geange/hbase-go/thrift/hbase"
+	"time"
+
+	hb "github.com/geange/hbase-go"
 )
 
 func main() {
-	sock, err := thrift.NewTSocket("127.0.0.1:9090")
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	client, err := hb.NewRawClient(ctx, hb.RawClientOption{
+		Host:       "172.23.49.214",
+		Port:       9090,
+		BufferSize: 8192,
+	})
 	if err != nil {
 		panic(err)
 	}
 
-	factory := thrift.NewTTransportFactory()
-	transport, err := factory.GetTransport(sock)
-	if err != nil {
+	if err := client.Open(); err != nil {
 		panic(err)
 	}
-
-	client := hbase.NewTHBaseServiceClientFactory(transport, thrift.NewTBinaryProtocolFactoryDefault())
-
-	if err := transport.Open(); err != nil {
-		panic(err)
-	}
-	defer transport.Close()
 
 	tables, err := client.ListNamespaceDescriptors(context.Background())
 	if err != nil {
