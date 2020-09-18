@@ -6,7 +6,10 @@ import (
 )
 
 type RawClient interface {
+	// open transport when client's transport closed
 	Open() error
+	// safeClose
+	Close(ctx context.Context) error
 	// Test for the existence of columns in the table, as specified in the TGet.
 	//
 	// @return true if the specified TGet matches one or more keys, false if not
@@ -34,7 +37,7 @@ type RawClient interface {
 	// Parameters:
 	//  - Table: the table to get from
 	//  - Tget: the TGet to fetch
-	Get(ctx context.Context, table []byte, tget *hbase.TGet) (r *hbase.TResult_, err error)
+	Get(ctx context.Context, table []byte, tget *hbase.TGet) (r *hbase.TResult, err error)
 	// Method for getting multiple rows.
 	//
 	// If a row cannot be found there will be a null
@@ -48,7 +51,7 @@ type RawClient interface {
 	//  - Tgets: a list of TGets to fetch, the Result list
 	// will have the Results at corresponding positions
 	// or null if there was an error
-	GetMultiple(ctx context.Context, table []byte, tgets []*hbase.TGet) (r []*hbase.TResult_, err error)
+	GetMultiple(ctx context.Context, table []byte, tgets []*hbase.TGet) (r []*hbase.TResult, err error)
 	// Commit a TPut to a table.
 	//
 	// Parameters:
@@ -113,11 +116,11 @@ type RawClient interface {
 	// Parameters:
 	//  - Table: the table to increment the value on
 	//  - Tincrement: the TIncrement to increment
-	Increment(ctx context.Context, table []byte, tincrement *hbase.TIncrement) (r *hbase.TResult_, err error)
+	Increment(ctx context.Context, table []byte, tincrement *hbase.TIncrement) (r *hbase.TResult, err error)
 	// Parameters:
 	//  - Table: the table to append the value on
 	//  - Tappend: the TAppend to append
-	Append(ctx context.Context, table []byte, tappend *hbase.TAppend) (r *hbase.TResult_, err error)
+	Append(ctx context.Context, table []byte, tappend *hbase.TAppend) (r *hbase.TResult, err error)
 	// Get a Scanner for the provided TScan object.
 	//
 	// @return Scanner Id to be used with other scanner procedures
@@ -133,7 +136,7 @@ type RawClient interface {
 	// Parameters:
 	//  - ScannerId: the Id of the Scanner to return rows from. This is an Id returned from the openScanner function.
 	//  - NumRows: number of rows to return
-	GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*hbase.TResult_, err error)
+	GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*hbase.TResult, err error)
 	// Closes the scanner. Should be called to free server side resources timely.
 	// Typically close once the scanner is not needed anymore, i.e. after looping
 	// over it to get all the required rows.
@@ -156,7 +159,7 @@ type RawClient interface {
 	//  - Table: the table to get the Scanner for
 	//  - Tscan: the scan object to get a Scanner for
 	//  - NumRows: number of rows to return
-	GetScannerResults(ctx context.Context, table []byte, tscan *hbase.TScan, numRows int32) (r []*hbase.TResult_, err error)
+	GetScannerResults(ctx context.Context, table []byte, tscan *hbase.TScan, numRows int32) (r []*hbase.TResult, err error)
 	// Given a table and a row get the location of the region that
 	// would contain the given row key.
 	//

@@ -17,6 +17,9 @@ type rawClient struct {
 }
 
 func (c *rawClient) Open() error {
+	if c.transport.IsOpen() {
+		return nil
+	}
 	return c.transport.Open()
 }
 

@@ -1598,51 +1598,51 @@ func (p *TColumnIncrement) String() string {
 //  - ColumnValues
 //  - Stale
 //  - Partial
-type TResult_ struct {
+type TResult struct {
 	Row          []byte          `thrift:"row,1" db:"row" json:"row,omitempty"`
 	ColumnValues []*TColumnValue `thrift:"columnValues,2,required" db:"columnValues" json:"columnValues"`
 	Stale        bool            `thrift:"stale,3" db:"stale" json:"stale"`
 	Partial      bool            `thrift:"partial,4" db:"partial" json:"partial"`
 }
 
-func NewTResult_() *TResult_ {
-	return &TResult_{}
+func NewTResult() *TResult {
+	return &TResult{}
 }
 
-var TResult__Row_DEFAULT []byte
+var TResult_Row_DEFAULT []byte
 
-func (p *TResult_) GetRow() []byte {
+func (p *TResult) GetRow() []byte {
 	return p.Row
 }
 
-func (p *TResult_) GetColumnValues() []*TColumnValue {
+func (p *TResult) GetColumnValues() []*TColumnValue {
 	return p.ColumnValues
 }
 
-var TResult__Stale_DEFAULT bool = false
+var TResult_Stale_DEFAULT bool = false
 
-func (p *TResult_) GetStale() bool {
+func (p *TResult) GetStale() bool {
 	return p.Stale
 }
 
-var TResult__Partial_DEFAULT bool = false
+var TResult_Partial_DEFAULT bool = false
 
-func (p *TResult_) GetPartial() bool {
+func (p *TResult) GetPartial() bool {
 	return p.Partial
 }
-func (p *TResult_) IsSetRow() bool {
+func (p *TResult) IsSetRow() bool {
 	return p.Row != nil
 }
 
-func (p *TResult_) IsSetStale() bool {
-	return p.Stale != TResult__Stale_DEFAULT
+func (p *TResult) IsSetStale() bool {
+	return p.Stale != TResult_Stale_DEFAULT
 }
 
-func (p *TResult_) IsSetPartial() bool {
-	return p.Partial != TResult__Partial_DEFAULT
+func (p *TResult) IsSetPartial() bool {
+	return p.Partial != TResult_Partial_DEFAULT
 }
 
-func (p *TResult_) Read(iprot thrift.TProtocol) error {
+func (p *TResult) Read(iprot thrift.TProtocol) error {
 	if _, err := iprot.ReadStructBegin(); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T read error: ", p), err)
 	}
@@ -1717,7 +1717,7 @@ func (p *TResult_) Read(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) ReadField1(iprot thrift.TProtocol) error {
+func (p *TResult) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadBinary(); err != nil {
 		return thrift.PrependError("error reading field 1: ", err)
 	} else {
@@ -1726,7 +1726,7 @@ func (p *TResult_) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) ReadField2(iprot thrift.TProtocol) error {
+func (p *TResult) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return thrift.PrependError("error reading list begin: ", err)
@@ -1746,7 +1746,7 @@ func (p *TResult_) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) ReadField3(iprot thrift.TProtocol) error {
+func (p *TResult) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadBool(); err != nil {
 		return thrift.PrependError("error reading field 3: ", err)
 	} else {
@@ -1755,7 +1755,7 @@ func (p *TResult_) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) ReadField4(iprot thrift.TProtocol) error {
+func (p *TResult) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadBool(); err != nil {
 		return thrift.PrependError("error reading field 4: ", err)
 	} else {
@@ -1764,7 +1764,7 @@ func (p *TResult_) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) Write(oprot thrift.TProtocol) error {
+func (p *TResult) Write(oprot thrift.TProtocol) error {
 	if err := oprot.WriteStructBegin("TResult"); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
 	}
@@ -1791,7 +1791,7 @@ func (p *TResult_) Write(oprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *TResult_) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *TResult) writeField1(oprot thrift.TProtocol) (err error) {
 	if p.IsSetRow() {
 		if err := oprot.WriteFieldBegin("row", thrift.STRING, 1); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 1:row: ", p), err)
@@ -1806,7 +1806,7 @@ func (p *TResult_) writeField1(oprot thrift.TProtocol) (err error) {
 	return err
 }
 
-func (p *TResult_) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *TResult) writeField2(oprot thrift.TProtocol) (err error) {
 	if err := oprot.WriteFieldBegin("columnValues", thrift.LIST, 2); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T write field begin error 2:columnValues: ", p), err)
 	}
@@ -1827,7 +1827,7 @@ func (p *TResult_) writeField2(oprot thrift.TProtocol) (err error) {
 	return err
 }
 
-func (p *TResult_) writeField3(oprot thrift.TProtocol) (err error) {
+func (p *TResult) writeField3(oprot thrift.TProtocol) (err error) {
 	if p.IsSetStale() {
 		if err := oprot.WriteFieldBegin("stale", thrift.BOOL, 3); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 3:stale: ", p), err)
@@ -1842,7 +1842,7 @@ func (p *TResult_) writeField3(oprot thrift.TProtocol) (err error) {
 	return err
 }
 
-func (p *TResult_) writeField4(oprot thrift.TProtocol) (err error) {
+func (p *TResult) writeField4(oprot thrift.TProtocol) (err error) {
 	if p.IsSetPartial() {
 		if err := oprot.WriteFieldBegin("partial", thrift.BOOL, 4); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T write field begin error 4:partial: ", p), err)
@@ -1857,11 +1857,11 @@ func (p *TResult_) writeField4(oprot thrift.TProtocol) (err error) {
 	return err
 }
 
-func (p *TResult_) String() string {
+func (p *TResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("TResult_(%+v)", *p)
+	return fmt.Sprintf("TResult(%+v)", *p)
 }
 
 // Attributes:
@@ -8915,7 +8915,7 @@ type THBaseService interface {
 	// Parameters:
 	//  - Table: the table to get from
 	//  - Tget: the TGet to fetch
-	Get(ctx context.Context, table []byte, tget *TGet) (r *TResult_, err error)
+	Get(ctx context.Context, table []byte, tget *TGet) (r *TResult, err error)
 	// Method for getting multiple rows.
 	//
 	// If a row cannot be found there will be a null
@@ -8929,7 +8929,7 @@ type THBaseService interface {
 	//  - Tgets: a list of TGets to fetch, the Result list
 	// will have the Results at corresponding positions
 	// or null if there was an error
-	GetMultiple(ctx context.Context, table []byte, tgets []*TGet) (r []*TResult_, err error)
+	GetMultiple(ctx context.Context, table []byte, tgets []*TGet) (r []*TResult, err error)
 	// Commit a TPut to a table.
 	//
 	// Parameters:
@@ -8994,11 +8994,11 @@ type THBaseService interface {
 	// Parameters:
 	//  - Table: the table to increment the value on
 	//  - Tincrement: the TIncrement to increment
-	Increment(ctx context.Context, table []byte, tincrement *TIncrement) (r *TResult_, err error)
+	Increment(ctx context.Context, table []byte, tincrement *TIncrement) (r *TResult, err error)
 	// Parameters:
 	//  - Table: the table to append the value on
 	//  - Tappend: the TAppend to append
-	Append(ctx context.Context, table []byte, tappend *TAppend) (r *TResult_, err error)
+	Append(ctx context.Context, table []byte, tappend *TAppend) (r *TResult, err error)
 	// Get a Scanner for the provided TScan object.
 	//
 	// @return Scanner Id to be used with other scanner procedures
@@ -9014,7 +9014,7 @@ type THBaseService interface {
 	// Parameters:
 	//  - ScannerId: the Id of the Scanner to return rows from. This is an Id returned from the openScanner function.
 	//  - NumRows: number of rows to return
-	GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*TResult_, err error)
+	GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*TResult, err error)
 	// Closes the scanner. Should be called to free server side resources timely.
 	// Typically close once the scanner is not needed anymore, i.e. after looping
 	// over it to get all the required rows.
@@ -9037,7 +9037,7 @@ type THBaseService interface {
 	//  - Table: the table to get the Scanner for
 	//  - Tscan: the scan object to get a Scanner for
 	//  - NumRows: number of rows to return
-	GetScannerResults(ctx context.Context, table []byte, tscan *TScan, numRows int32) (r []*TResult_, err error)
+	GetScannerResults(ctx context.Context, table []byte, tscan *TScan, numRows int32) (r []*TResult, err error)
 	// Given a table and a row get the location of the region that
 	// would contain the given row key.
 	//
@@ -9335,7 +9335,7 @@ func (p *THBaseServiceClient) ExistsAll(ctx context.Context, table []byte, tgets
 // Parameters:
 //  - Table: the table to get from
 //  - Tget: the TGet to fetch
-func (p *THBaseServiceClient) Get(ctx context.Context, table []byte, tget *TGet) (r *TResult_, err error) {
+func (p *THBaseServiceClient) Get(ctx context.Context, table []byte, tget *TGet) (r *TResult, err error) {
 	var _args36 THBaseServiceGetArgs
 	_args36.Table = table
 	_args36.Tget = tget
@@ -9364,7 +9364,7 @@ func (p *THBaseServiceClient) Get(ctx context.Context, table []byte, tget *TGet)
 //  - Tgets: a list of TGets to fetch, the Result list
 // will have the Results at corresponding positions
 // or null if there was an error
-func (p *THBaseServiceClient) GetMultiple(ctx context.Context, table []byte, tgets []*TGet) (r []*TResult_, err error) {
+func (p *THBaseServiceClient) GetMultiple(ctx context.Context, table []byte, tgets []*TGet) (r []*TResult, err error) {
 	var _args38 THBaseServiceGetMultipleArgs
 	_args38.Table = table
 	_args38.Tgets = tgets
@@ -9542,7 +9542,7 @@ func (p *THBaseServiceClient) CheckAndDelete(ctx context.Context, table []byte, 
 // Parameters:
 //  - Table: the table to increment the value on
 //  - Tincrement: the TIncrement to increment
-func (p *THBaseServiceClient) Increment(ctx context.Context, table []byte, tincrement *TIncrement) (r *TResult_, err error) {
+func (p *THBaseServiceClient) Increment(ctx context.Context, table []byte, tincrement *TIncrement) (r *TResult, err error) {
 	var _args52 THBaseServiceIncrementArgs
 	_args52.Table = table
 	_args52.Tincrement = tincrement
@@ -9561,7 +9561,7 @@ func (p *THBaseServiceClient) Increment(ctx context.Context, table []byte, tincr
 // Parameters:
 //  - Table: the table to append the value on
 //  - Tappend: the TAppend to append
-func (p *THBaseServiceClient) Append(ctx context.Context, table []byte, tappend *TAppend) (r *TResult_, err error) {
+func (p *THBaseServiceClient) Append(ctx context.Context, table []byte, tappend *TAppend) (r *TResult, err error) {
 	var _args54 THBaseServiceAppendArgs
 	_args54.Table = table
 	_args54.Tappend = tappend
@@ -9607,7 +9607,7 @@ func (p *THBaseServiceClient) OpenScanner(ctx context.Context, table []byte, tsc
 // Parameters:
 //  - ScannerId: the Id of the Scanner to return rows from. This is an Id returned from the openScanner function.
 //  - NumRows: number of rows to return
-func (p *THBaseServiceClient) GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*TResult_, err error) {
+func (p *THBaseServiceClient) GetScannerRows(ctx context.Context, scannerId int32, numRows int32) (r []*TResult, err error) {
 	var _args58 THBaseServiceGetScannerRowsArgs
 	_args58.ScannerId = scannerId
 	_args58.NumRows = numRows
@@ -9678,7 +9678,7 @@ func (p *THBaseServiceClient) MutateRow(ctx context.Context, table []byte, trowM
 //  - Table: the table to get the Scanner for
 //  - Tscan: the scan object to get a Scanner for
 //  - NumRows: number of rows to return
-func (p *THBaseServiceClient) GetScannerResults(ctx context.Context, table []byte, tscan *TScan, numRows int32) (r []*TResult_, err error) {
+func (p *THBaseServiceClient) GetScannerResults(ctx context.Context, table []byte, tscan *TScan, numRows int32) (r []*TResult, err error) {
 	var _args64 THBaseServiceGetScannerResultsArgs
 	_args64.Table = table
 	_args64.Tscan = tscan
@@ -10526,7 +10526,7 @@ func (p *tHBaseServiceProcessorGet) Process(ctx context.Context, seqId int32, ip
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceGetResult{}
-	var retval *TResult_
+	var retval *TResult
 	var err2 error
 	if retval, err2 = p.handler.Get(ctx, args.Table, args.Tget); err2 != nil {
 		switch v := err2.(type) {
@@ -10579,7 +10579,7 @@ func (p *tHBaseServiceProcessorGetMultiple) Process(ctx context.Context, seqId i
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceGetMultipleResult{}
-	var retval []*TResult_
+	var retval []*TResult
 	var err2 error
 	if retval, err2 = p.handler.GetMultiple(ctx, args.Table, args.Tgets); err2 != nil {
 		switch v := err2.(type) {
@@ -10941,7 +10941,7 @@ func (p *tHBaseServiceProcessorIncrement) Process(ctx context.Context, seqId int
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceIncrementResult{}
-	var retval *TResult_
+	var retval *TResult
 	var err2 error
 	if retval, err2 = p.handler.Increment(ctx, args.Table, args.Tincrement); err2 != nil {
 		switch v := err2.(type) {
@@ -10994,7 +10994,7 @@ func (p *tHBaseServiceProcessorAppend) Process(ctx context.Context, seqId int32,
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceAppendResult{}
-	var retval *TResult_
+	var retval *TResult
 	var err2 error
 	if retval, err2 = p.handler.Append(ctx, args.Table, args.Tappend); err2 != nil {
 		switch v := err2.(type) {
@@ -11100,7 +11100,7 @@ func (p *tHBaseServiceProcessorGetScannerRows) Process(ctx context.Context, seqI
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceGetScannerRowsResult{}
-	var retval []*TResult_
+	var retval []*TResult
 	var err2 error
 	if retval, err2 = p.handler.GetScannerRows(ctx, args.ScannerId, args.NumRows); err2 != nil {
 		switch v := err2.(type) {
@@ -11257,7 +11257,7 @@ func (p *tHBaseServiceProcessorGetScannerResults) Process(ctx context.Context, s
 
 	iprot.ReadMessageEnd()
 	result := THBaseServiceGetScannerResultsResult{}
-	var retval []*TResult_
+	var retval []*TResult
 	var err2 error
 	if retval, err2 = p.handler.GetScannerResults(ctx, args.Table, args.Tscan, args.NumRows); err2 != nil {
 		switch v := err2.(type) {
@@ -13574,7 +13574,7 @@ func (p *THBaseServiceGetArgs) String() string {
 //  - Success
 //  - Io
 type THBaseServiceGetResult struct {
-	Success *TResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Success *TResult  `thrift:"success,0" db:"success" json:"success,omitempty"`
 	Io      *TIOError `thrift:"io,1" db:"io" json:"io,omitempty"`
 }
 
@@ -13582,9 +13582,9 @@ func NewTHBaseServiceGetResult() *THBaseServiceGetResult {
 	return &THBaseServiceGetResult{}
 }
 
-var THBaseServiceGetResult_Success_DEFAULT *TResult_
+var THBaseServiceGetResult_Success_DEFAULT *TResult
 
-func (p *THBaseServiceGetResult) GetSuccess() *TResult_ {
+func (p *THBaseServiceGetResult) GetSuccess() *TResult {
 	if !p.IsSetSuccess() {
 		return THBaseServiceGetResult_Success_DEFAULT
 	}
@@ -13657,7 +13657,7 @@ func (p *THBaseServiceGetResult) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *THBaseServiceGetResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = &TResult_{}
+	p.Success = &TResult{}
 	if err := p.Success.Read(iprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
 	}
@@ -13906,17 +13906,17 @@ func (p *THBaseServiceGetMultipleArgs) String() string {
 //  - Success
 //  - Io
 type THBaseServiceGetMultipleResult struct {
-	Success []*TResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
-	Io      *TIOError   `thrift:"io,1" db:"io" json:"io,omitempty"`
+	Success []*TResult `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Io      *TIOError  `thrift:"io,1" db:"io" json:"io,omitempty"`
 }
 
 func NewTHBaseServiceGetMultipleResult() *THBaseServiceGetMultipleResult {
 	return &THBaseServiceGetMultipleResult{}
 }
 
-var THBaseServiceGetMultipleResult_Success_DEFAULT []*TResult_
+var THBaseServiceGetMultipleResult_Success_DEFAULT []*TResult
 
-func (p *THBaseServiceGetMultipleResult) GetSuccess() []*TResult_ {
+func (p *THBaseServiceGetMultipleResult) GetSuccess() []*TResult {
 	return p.Success
 }
 
@@ -13990,10 +13990,10 @@ func (p *THBaseServiceGetMultipleResult) ReadField0(iprot thrift.TProtocol) erro
 	if err != nil {
 		return thrift.PrependError("error reading list begin: ", err)
 	}
-	tSlice := make([]*TResult_, 0, size)
+	tSlice := make([]*TResult, 0, size)
 	p.Success = tSlice
 	for i := 0; i < size; i++ {
-		_elem127 := &TResult_{}
+		_elem127 := &TResult{}
 		if err := _elem127.Read(iprot); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem127), err)
 		}
@@ -16414,7 +16414,7 @@ func (p *THBaseServiceIncrementArgs) String() string {
 //  - Success
 //  - Io
 type THBaseServiceIncrementResult struct {
-	Success *TResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Success *TResult  `thrift:"success,0" db:"success" json:"success,omitempty"`
 	Io      *TIOError `thrift:"io,1" db:"io" json:"io,omitempty"`
 }
 
@@ -16422,9 +16422,9 @@ func NewTHBaseServiceIncrementResult() *THBaseServiceIncrementResult {
 	return &THBaseServiceIncrementResult{}
 }
 
-var THBaseServiceIncrementResult_Success_DEFAULT *TResult_
+var THBaseServiceIncrementResult_Success_DEFAULT *TResult
 
-func (p *THBaseServiceIncrementResult) GetSuccess() *TResult_ {
+func (p *THBaseServiceIncrementResult) GetSuccess() *TResult {
 	if !p.IsSetSuccess() {
 		return THBaseServiceIncrementResult_Success_DEFAULT
 	}
@@ -16497,7 +16497,7 @@ func (p *THBaseServiceIncrementResult) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *THBaseServiceIncrementResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = &TResult_{}
+	p.Success = &TResult{}
 	if err := p.Success.Read(iprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
 	}
@@ -16733,7 +16733,7 @@ func (p *THBaseServiceAppendArgs) String() string {
 //  - Success
 //  - Io
 type THBaseServiceAppendResult struct {
-	Success *TResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Success *TResult  `thrift:"success,0" db:"success" json:"success,omitempty"`
 	Io      *TIOError `thrift:"io,1" db:"io" json:"io,omitempty"`
 }
 
@@ -16741,9 +16741,9 @@ func NewTHBaseServiceAppendResult() *THBaseServiceAppendResult {
 	return &THBaseServiceAppendResult{}
 }
 
-var THBaseServiceAppendResult_Success_DEFAULT *TResult_
+var THBaseServiceAppendResult_Success_DEFAULT *TResult
 
-func (p *THBaseServiceAppendResult) GetSuccess() *TResult_ {
+func (p *THBaseServiceAppendResult) GetSuccess() *TResult {
 	if !p.IsSetSuccess() {
 		return THBaseServiceAppendResult_Success_DEFAULT
 	}
@@ -16816,7 +16816,7 @@ func (p *THBaseServiceAppendResult) Read(iprot thrift.TProtocol) error {
 }
 
 func (p *THBaseServiceAppendResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = &TResult_{}
+	p.Success = &TResult{}
 	if err := p.Success.Read(iprot); err != nil {
 		return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", p.Success), err)
 	}
@@ -17364,7 +17364,7 @@ func (p *THBaseServiceGetScannerRowsArgs) String() string {
 //  - Io
 //  - Ia: if the scannerId is invalid
 type THBaseServiceGetScannerRowsResult struct {
-	Success []*TResult_       `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Success []*TResult        `thrift:"success,0" db:"success" json:"success,omitempty"`
 	Io      *TIOError         `thrift:"io,1" db:"io" json:"io,omitempty"`
 	Ia      *TIllegalArgument `thrift:"ia,2" db:"ia" json:"ia,omitempty"`
 }
@@ -17373,9 +17373,9 @@ func NewTHBaseServiceGetScannerRowsResult() *THBaseServiceGetScannerRowsResult {
 	return &THBaseServiceGetScannerRowsResult{}
 }
 
-var THBaseServiceGetScannerRowsResult_Success_DEFAULT []*TResult_
+var THBaseServiceGetScannerRowsResult_Success_DEFAULT []*TResult
 
-func (p *THBaseServiceGetScannerRowsResult) GetSuccess() []*TResult_ {
+func (p *THBaseServiceGetScannerRowsResult) GetSuccess() []*TResult {
 	return p.Success
 }
 
@@ -17472,10 +17472,10 @@ func (p *THBaseServiceGetScannerRowsResult) ReadField0(iprot thrift.TProtocol) e
 	if err != nil {
 		return thrift.PrependError("error reading list begin: ", err)
 	}
-	tSlice := make([]*TResult_, 0, size)
+	tSlice := make([]*TResult, 0, size)
 	p.Success = tSlice
 	for i := 0; i < size; i++ {
-		_elem131 := &TResult_{}
+		_elem131 := &TResult{}
 		if err := _elem131.Read(iprot); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem131), err)
 		}
@@ -18328,17 +18328,17 @@ func (p *THBaseServiceGetScannerResultsArgs) String() string {
 //  - Success
 //  - Io
 type THBaseServiceGetScannerResultsResult struct {
-	Success []*TResult_ `thrift:"success,0" db:"success" json:"success,omitempty"`
-	Io      *TIOError   `thrift:"io,1" db:"io" json:"io,omitempty"`
+	Success []*TResult `thrift:"success,0" db:"success" json:"success,omitempty"`
+	Io      *TIOError  `thrift:"io,1" db:"io" json:"io,omitempty"`
 }
 
 func NewTHBaseServiceGetScannerResultsResult() *THBaseServiceGetScannerResultsResult {
 	return &THBaseServiceGetScannerResultsResult{}
 }
 
-var THBaseServiceGetScannerResultsResult_Success_DEFAULT []*TResult_
+var THBaseServiceGetScannerResultsResult_Success_DEFAULT []*TResult
 
-func (p *THBaseServiceGetScannerResultsResult) GetSuccess() []*TResult_ {
+func (p *THBaseServiceGetScannerResultsResult) GetSuccess() []*TResult {
 	return p.Success
 }
 
@@ -18412,10 +18412,10 @@ func (p *THBaseServiceGetScannerResultsResult) ReadField0(iprot thrift.TProtocol
 	if err != nil {
 		return thrift.PrependError("error reading list begin: ", err)
 	}
-	tSlice := make([]*TResult_, 0, size)
+	tSlice := make([]*TResult, 0, size)
 	p.Success = tSlice
 	for i := 0; i < size; i++ {
-		_elem132 := &TResult_{}
+		_elem132 := &TResult{}
 		if err := _elem132.Read(iprot); err != nil {
 			return thrift.PrependError(fmt.Sprintf("%T error reading struct: ", _elem132), err)
 		}
