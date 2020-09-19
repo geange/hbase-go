@@ -64,12 +64,12 @@ for _, v := range result.ColumnValues {
 family := []byte("d")
 qualifier := []byte("001")
 result, err := client.Get(context.Background(), table, &hbase.TGet{
-		Row: []byte("abc"),
-		Columns: []*hbase.TColumn{&hbase.TColumn{
-			Family:    family,
-			Qualifier: qualifier,
-		}},
-	})
+    Row: []byte("abc"),
+    Columns: []*hbase.TColumn{&hbase.TColumn{
+        Family:    family,
+        Qualifier: qualifier,
+    }},
+})
 ```
 
 #### Get a specific cell with a filter
