@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/geange/hbase-go/thrift/hbase"
+	"github.com/geange/hbase-go/thrift/v2"
 	"time"
 
 	hb "github.com/geange/hbase-go"

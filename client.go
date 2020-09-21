@@ -2,7 +2,7 @@ package hbase
 
 import (
 	"context"
-	"github.com/geange/hbase-go/thrift/hbase"
+	"github.com/geange/hbase-go/thrift/v2"
 )
 
 type RawClient interface {
