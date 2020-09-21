@@ -27,16 +27,19 @@ func main() {
 
 	table := []byte("demo")
 
-	err = client.Put(context.Background(), table, &hbase.TPut{
-		Row: []byte("abc"),
-		ColumnValues: []*hbase.TColumnValue{&hbase.TColumnValue{
-			Family:    []byte("d"),
-			Qualifier: []byte("001"),
-			Value:     []byte("1234567890"),
-		}},
-	})
-	if err != nil {
-		panic(err)
+	for i := 0; i < 100; i++ {
+		key := fmt.Sprintf("abc:%05d", i)
+		err = client.Put(context.Background(), table, &hbase.TPut{
+			Row: []byte(key),
+			ColumnValues: []*hbase.TColumnValue{&hbase.TColumnValue{
+				Family:    []byte("d"),
+				Qualifier: []byte("003"),
+				Value:     []byte("1234567890"),
+			}},
+		})
+		if err != nil {
+			panic(err)
+		}
 	}
 
 	result, err := client.Get(context.Background(), table, &hbase.TGet{
@@ -45,7 +48,7 @@ func main() {
 			Family:    []byte("d"),
 			Qualifier: []byte("001"),
 		}},
-		FilterString: []byte("PrefixFilter ('ab')"),
+		FilterString: []byte("RowFilter(=,'substring:a')"),
 	})
 	if err != nil {
 		panic(err)

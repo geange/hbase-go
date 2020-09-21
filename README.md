@@ -1,5 +1,12 @@
 # hbase-go
 
+Hbase(thrift2) SDK for golang 
+
+Advantages:
+* No need to compile with thrift by yourself
+* Manager by go module
+* Keep update and easy to use
+
 ## Installation
 
 go get github.com/geange/hbase-go
