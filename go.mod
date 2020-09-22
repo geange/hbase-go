@@ -6,4 +6,3 @@ require (
 	git.apache.org/thrift.git v0.0.0-20200208223004-33dcbd08c080
 	github.com/apache/thrift v0.13.0
 )
-

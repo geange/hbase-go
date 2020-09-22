@@ -5,7 +5,7 @@ import (
 	"github.com/geange/hbase-go/thrift/v2"
 )
 
-type RawClient interface {
+type RawClientV2 interface {
 	// open transport when client's transport closed
 	Open() error
 	// safeClose

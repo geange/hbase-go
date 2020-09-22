@@ -3,27 +3,27 @@ package hbase
 import (
 	"context"
 	"github.com/apache/thrift/lib/go/thrift"
-	"github.com/geange/hbase-go/thrift/v2"
+	thrift2 "github.com/geange/hbase-go/thrift/v2"
 	"net"
 	"strconv"
 	"time"
 )
 
-type rawClient struct {
-	*hbase.THBaseServiceClient
+type rawClientV2 struct {
+	*thrift2.THBaseServiceClient
 	transport thrift.TTransport
 	host      string
 	port      int
 }
 
-func (c *rawClient) Open() error {
+func (c *rawClientV2) Open() error {
 	if c.transport.IsOpen() {
 		return nil
 	}
 	return c.transport.Open()
 }
 
-func (c *rawClient) Close(ctx context.Context) error {
+func (c *rawClientV2) Close(ctx context.Context) error {
 	if err := c.transport.Flush(ctx); err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ type RawClientOption struct {
 	BufferSize int
 }
 
-func NewRawClient(ctx context.Context, option RawClientOption) (rc RawClient, err error) {
+func NewRawClientV2(ctx context.Context, option RawClientOption) (rc RawClientV2, err error) {
 	hostPort := net.JoinHostPort(option.Host, strconv.Itoa(option.Port))
 
 	var socket *thrift.TSocket
@@ -60,9 +60,9 @@ func NewRawClient(ctx context.Context, option RawClientOption) (rc RawClient, er
 		return nil, err
 	}
 
-	client := hbase.NewTHBaseServiceClientFactory(transport, thrift.NewTBinaryProtocolFactoryDefault())
+	client := thrift2.NewTHBaseServiceClientFactory(transport, thrift.NewTBinaryProtocolFactoryDefault())
 
-	return &rawClient{
+	return &rawClientV2{
 		THBaseServiceClient: client,
 		host:                option.Host,
 		port:                option.Port,
