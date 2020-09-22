@@ -10,6 +10,8 @@ import (
 )
 
 type RawClientV1 interface {
+	Open() error
+	Close() error
 	// Brings a table on-line (enables it)
 	//
 	// Parameters:
