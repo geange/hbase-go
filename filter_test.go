@@ -9,8 +9,10 @@ func TestColumnRangeFilter_FilterExpress(t *testing.T) {
 	min := "001"
 	max := "002"
 	filter := columnRangeFilter{
-		minColumn: &min,
-		maxColumn: &max,
+		minColumn: min,
+		minFlag:   true,
+		maxColumn: max,
+		maxFlag:   true,
 	}
 
 	express := filter.FilterExpress()
