@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	hostPort := net.JoinHostPort("172.23.58.228", "9090")
+	hostPort := net.JoinHostPort("0.0.0.0", "9090")
 	socket, err := thrift.NewTSocketTimeout(hostPort, 10*time.Second)
 	transport := thrift.NewTTransportFactory().GetTransport(socket)
 	client := hbase.NewHbaseClientFactory(transport, thrift.NewTBinaryProtocolFactoryDefault())
@@ -17,6 +17,21 @@ func main() {
 	transport.Open()
 
 	tables, err := client.GetTableNames()
+	if err != nil {
+		panic(err)
+	}
+
+	for _, v := range tables {
+		fmt.Println(string(v))
+	}
+
+	if transport.IsOpen() {
+		transport.Close()
+	}
+
+	transport.Open()
+
+	tables, err = client.GetTableNames()
 	if err != nil {
 		panic(err)
 	}

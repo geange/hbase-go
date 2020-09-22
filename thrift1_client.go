@@ -9,8 +9,9 @@ import (
 	"time"
 )
 
-type RawClientV1 interface {
+type ThriftClient interface {
 	Open() error
+	IsOpen() bool
 	Close() error
 	// Brings a table on-line (enables it)
 	//
@@ -462,14 +463,15 @@ func (c *rawClientV1) Open() error {
 	return c.transport.Open()
 }
 
+func (c *rawClientV1) IsOpen() bool {
+	return c.transport.IsOpen()
+}
+
 func (c *rawClientV1) Close() error {
-	if err := c.transport.Flush(); err != nil {
-		return err
-	}
 	return c.transport.Close()
 }
 
-func NewRawClientV1(ctx context.Context, option RawClientOption) (rc RawClientV1, err error) {
+func NewRawClientV1(ctx context.Context, option RawClientOption) (rc ThriftClient, err error) {
 	hostPort := net.JoinHostPort(option.Host, strconv.Itoa(option.Port))
 
 	var socket *thrift.TSocket
