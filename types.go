@@ -20,23 +20,23 @@ type Get struct {
 	FilterBytes     []byte            `thrift:"filterBytes,15" db:"filterBytes" json:"filterBytes,omitempty"`
 }
 
-func (t *Get) Trans() *thrift2.TGet {
+func toThrift2TGet(ptr *Get) *thrift2.TGet {
 	return &thrift2.TGet{
-		Row:             nil,
-		Columns:         nil,
-		Timestamp:       nil,
-		TimeRange:       nil,
-		MaxVersions:     nil,
-		FilterString:    nil,
-		Attributes:      nil,
-		Authorizations:  nil,
-		Consistency:     nil,
-		TargetReplicaId: nil,
-		CacheBlocks:     nil,
-		StoreLimit:      nil,
-		StoreOffset:     nil,
-		ExistenceOnly:   nil,
-		FilterBytes:     nil,
+		Row:             ptr.Row,
+		Columns:         toThrift2ColumnList(ptr.Columns),
+		Timestamp:       ptr.Timestamp,
+		TimeRange:       toThrift2TTimeRange(ptr.TimeRange),
+		MaxVersions:     ptr.MaxVersions,
+		FilterString:    ptr.FilterString,
+		Attributes:      ptr.Attributes,
+		Authorizations:  toThrift2TAuthorization(ptr.Authorizations),
+		Consistency:     toThrift2TConsistency(ptr.Consistency),
+		TargetReplicaId: ptr.TargetReplicaId,
+		CacheBlocks:     ptr.CacheBlocks,
+		StoreLimit:      ptr.StoreLimit,
+		StoreOffset:     ptr.StoreOffset,
+		ExistenceOnly:   ptr.ExistenceOnly,
+		FilterBytes:     ptr.FilterBytes,
 	}
 }
 
@@ -46,11 +46,25 @@ type Column struct {
 	Timestamp *int64
 }
 
-func (t *Column) Trans() *thrift2.TColumn {
+func toThrift2TColumn(ptr *Column) *thrift2.TColumn {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TColumn{
-		Family:    t.Family,
-		Qualifier: t.Qualifier,
-		Timestamp: t.Timestamp,
+		Family:    ptr.Family,
+		Qualifier: ptr.Qualifier,
+		Timestamp: ptr.Timestamp,
+	}
+}
+
+func fromThrift2Column(ptr *thrift2.TColumn) *Column {
+	if ptr == nil {
+		return nil
+	}
+	return &Column{
+		Family:    ptr.Family,
+		Qualifier: ptr.Qualifier,
+		Timestamp: ptr.Timestamp,
 	}
 }
 
@@ -59,10 +73,13 @@ type TimeRange struct {
 	MaxStamp int64
 }
 
-func (t *TimeRange) toThrift2() *thrift2.TTimeRange {
+func toThrift2TTimeRange(ptr *TimeRange) *thrift2.TTimeRange {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TTimeRange{
-		MinStamp: t.MinStamp,
-		MaxStamp: t.MaxStamp,
+		MinStamp: ptr.MinStamp,
+		MaxStamp: ptr.MaxStamp,
 	}
 }
 
@@ -70,11 +87,21 @@ type Authorization struct {
 	Labels []string
 }
 
-func (t *Authorization) toThrift2() *thrift2.TAuthorization {
-	return &thrift2.TAuthorization{Labels: t.Labels}
+func toThrift2TAuthorization(ptr *Authorization) *thrift2.TAuthorization {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TAuthorization{Labels: ptr.Labels}
 }
 
 type TConsistency int64
+
+func toThrift2TConsistency(ptr *TConsistency) *thrift2.TConsistency {
+	if ptr == nil {
+		return nil
+	}
+	return (*thrift2.TConsistency)(ptr)
+}
 
 type Result struct {
 	Row          []byte
@@ -83,12 +110,27 @@ type Result struct {
 	Partial      bool
 }
 
-func (t *Result) toThrift2() *thrift2.TResult {
+func toThrift2TResult(ptr *Result) *thrift2.TResult {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TResult{
-		Row:          t.Row,
-		ColumnValues: toThrift2ColumnValueList(t.ColumnValues),
-		Stale:        t.Stale,
-		Partial:      t.Partial,
+		Row:          ptr.Row,
+		ColumnValues: toThrift2ColumnValueList(ptr.ColumnValues),
+		Stale:        ptr.Stale,
+		Partial:      ptr.Partial,
+	}
+}
+
+func fromThrift2Result(ptr *thrift2.TResult) *Result {
+	if ptr == nil {
+		return nil
+	}
+	return &Result{
+		Row:          ptr.Row,
+		ColumnValues: fromThrift2ColumnValueList(ptr.ColumnValues),
+		Stale:        ptr.Stale,
+		Partial:      ptr.Partial,
 	}
 }
 
@@ -101,14 +143,28 @@ type ColumnValue struct {
 	Type      *int8
 }
 
-func (t *ColumnValue) toThrift2() *thrift2.TColumnValue {
+func toThrift2TColumnValue(ptr *ColumnValue) *thrift2.TColumnValue {
 	return &thrift2.TColumnValue{
-		Family:    t.Family,
-		Qualifier: t.Qualifier,
-		Value:     t.Value,
-		Timestamp: t.Timestamp,
-		Tags:      t.Tags,
-		Type:      t.Type,
+		Family:    ptr.Family,
+		Qualifier: ptr.Qualifier,
+		Value:     ptr.Value,
+		Timestamp: ptr.Timestamp,
+		Tags:      ptr.Tags,
+		Type:      ptr.Type,
+	}
+}
+
+func fromThrift2ColumnValue(ptr *thrift2.TColumnValue) *ColumnValue {
+	if ptr == nil {
+		return nil
+	}
+	return &ColumnValue{
+		Family:    ptr.Family,
+		Qualifier: ptr.Qualifier,
+		Value:     ptr.Value,
+		Timestamp: ptr.Timestamp,
+		Tags:      ptr.Tags,
+		Type:      ptr.Type,
 	}
 }
 
@@ -122,24 +178,27 @@ type Put struct {
 	CellVisibility *CellVisibility
 }
 
-func (t *Put) toThrift2() *thrift2.TPut {
+func toThrift2TPut(ptr *Put) *thrift2.TPut {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TPut{
-		Row:            t.Row,
-		ColumnValues:   toThrift2ColumnValueList(t.ColumnValues),
-		Timestamp:      t.Timestamp,
-		Attributes:     t.Attributes,
-		Durability:     toThrift2TDurability(t.Durability),
-		CellVisibility: nil,
+		Row:            ptr.Row,
+		ColumnValues:   toThrift2ColumnValueList(ptr.ColumnValues),
+		Timestamp:      ptr.Timestamp,
+		Attributes:     ptr.Attributes,
+		Durability:     toThrift2TDurability(ptr.Durability),
+		CellVisibility: toThrift2TCellVisibility(ptr.CellVisibility),
 	}
 }
 
 type TDurability int64
 
-func toThrift2TDurability(v *TDurability) *thrift2.TDurability {
-	if v == nil {
+func toThrift2TDurability(ptr *TDurability) *thrift2.TDurability {
+	if ptr == nil {
 		return nil
 	}
-	r := thrift2.TDurability(*v)
+	r := thrift2.TDurability(*ptr)
 	return &r
 }
 
@@ -155,27 +214,59 @@ type CellVisibility struct {
 	Expression *string
 }
 
-func toThrift() {
-
+func toThrift2TCellVisibility(ptr *CellVisibility) *thrift2.TCellVisibility {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TCellVisibility{
+		Expression: ptr.Expression,
+	}
 }
 
 type Delete struct {
-	Row        []byte     `thrift:"row,1,required" db:"row" json:"row"`
-	Columns    []*Column  `thrift:"columns,2" db:"columns" json:"columns,omitempty"`
-	Timestamp  *int64     `thrift:"timestamp,3" db:"timestamp" json:"timestamp,omitempty"`
-	DeleteType DeleteType `thrift:"deleteType,4" db:"deleteType" json:"deleteType"`
-	// unused field # 5
-	Attributes map[string][]byte `thrift:"attributes,6" db:"attributes" json:"attributes,omitempty"`
-	Durability *TDurability      `thrift:"durability,7" db:"durability" json:"durability,omitempty"`
+	Row        []byte
+	Columns    []*Column
+	Timestamp  *int64
+	DeleteType TDeleteType
+	Attributes map[string][]byte
+	Durability *TDurability
 }
 
-type DeleteType int64
+func toThrift2TDelete(ptr *Delete) *thrift2.TDelete {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TDelete{
+		Row:        ptr.Row,
+		Columns:    toThrift2ColumnList(ptr.Columns),
+		Timestamp:  ptr.Timestamp,
+		DeleteType: thrift2.TDeleteType(ptr.DeleteType),
+		Attributes: ptr.Attributes,
+		Durability: toThrift2TDurability(ptr.Durability),
+	}
+}
+
+func fromThrift2Delete(ptr *thrift2.TDelete) *Delete {
+	if ptr == nil {
+		return nil
+	}
+	return &Delete{
+		Row:        ptr.Row,
+		Columns:    fromThrift2ColumnList(ptr.Columns),
+		Timestamp:  ptr.Timestamp,
+		DeleteType: TDeleteType(ptr.DeleteType),
+		Attributes: ptr.Attributes,
+		Durability: (*TDurability)(ptr.Durability),
+	}
+}
+
+type TDeleteType int64
 
 const (
-	DeleteColumn        DeleteType = 0
-	DeleteColumns       DeleteType = 1
-	DeleteFamily        DeleteType = 2
-	DeleteFamilyVersion DeleteType = 3
+	DeleteColumn        TDeleteType = 0
+	DeleteColumns       TDeleteType = 1
+	DeleteFamily        TDeleteType = 2
+	DeleteFamilyVersion TDeleteType = 3
 )
 
 type Increment struct {
@@ -187,19 +278,58 @@ type Increment struct {
 	ReturnResults  *bool              `thrift:"returnResults,7" db:"returnResults" json:"returnResults,omitempty"`
 }
 
+func toThrift2TIncrement(ptr *Increment) *thrift2.TIncrement {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TIncrement{
+		Row:            ptr.Row,
+		Columns:        toThrift2TColumnIncrementList(ptr.Columns),
+		Attributes:     ptr.Attributes,
+		Durability:     (*thrift2.TDurability)(ptr.Durability),
+		CellVisibility: toThrift2TCellVisibility(ptr.CellVisibility),
+		ReturnResults:  ptr.ReturnResults,
+	}
+}
+
 type ColumnIncrement struct {
 	Family    []byte `thrift:"family,1,required" db:"family" json:"family"`
 	Qualifier []byte `thrift:"qualifier,2,required" db:"qualifier" json:"qualifier"`
 	Amount    int64  `thrift:"amount,3" db:"amount" json:"amount"`
 }
 
-type TAppend struct {
+func toThrift2TColumnIncrement(ptr *ColumnIncrement) *thrift2.TColumnIncrement {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TColumnIncrement{
+		Family:    ptr.Family,
+		Qualifier: ptr.Qualifier,
+		Amount:    ptr.Amount,
+	}
+}
+
+type Append struct {
 	Row            []byte
 	Columns        []*ColumnValue
 	Attributes     map[string][]byte
 	Durability     *TDurability
 	CellVisibility *CellVisibility
 	ReturnResults  *bool
+}
+
+func toThrift2TAppend(ptr *Append) *thrift2.TAppend {
+	if ptr == nil {
+		return nil
+	}
+	return &thrift2.TAppend{
+		Row:            ptr.Row,
+		Columns:        toThrift2ColumnValueList(ptr.Columns),
+		Attributes:     ptr.Attributes,
+		Durability:     (*thrift2.TDurability)(ptr.Durability),
+		CellVisibility: toThrift2TCellVisibility(ptr.CellVisibility),
+		ReturnResults:  ptr.ReturnResults,
+	}
 }
 
 type Scan struct {
@@ -223,27 +353,26 @@ type Scan struct {
 	FilterBytes        []byte                `thrift:"filterBytes,18" db:"filterBytes" json:"filterBytes,omitempty"`
 }
 
-// todo
-func (t *Scan) toThrift2() *thrift2.TScan {
+func toThrift2TScan(ptr *Scan) *thrift2.TScan {
 	return &thrift2.TScan{
-		StartRow:           t.StartRow,
-		StopRow:            t.StopRow,
-		Columns:            nil,
-		Caching:            nil,
-		MaxVersions:        0,
-		TimeRange:          nil,
-		FilterString:       nil,
-		BatchSize:          nil,
-		Attributes:         nil,
-		Authorizations:     nil,
-		Reversed:           nil,
-		CacheBlocks:        nil,
-		ColFamTimeRangeMap: nil,
-		ReadType:           nil,
-		Limit:              nil,
-		Consistency:        nil,
-		TargetReplicaId:    nil,
-		FilterBytes:        nil,
+		StartRow:           ptr.StartRow,
+		StopRow:            ptr.StopRow,
+		Columns:            toThrift2ColumnList(ptr.Columns),
+		Caching:            ptr.Caching,
+		MaxVersions:        ptr.MaxVersions,
+		TimeRange:          toThrift2TTimeRange(ptr.TimeRange),
+		FilterString:       ptr.FilterString,
+		BatchSize:          ptr.BatchSize,
+		Attributes:         ptr.Attributes,
+		Authorizations:     toThrift2TAuthorization(ptr.Authorizations),
+		Reversed:           ptr.Reversed,
+		CacheBlocks:        ptr.CacheBlocks,
+		ColFamTimeRangeMap: toThriftTTimeRangeMap(ptr.ColFamTimeRangeMap),
+		ReadType:           (*thrift2.TReadType)(ptr.ReadType),
+		Limit:              ptr.Limit,
+		Consistency:        (*thrift2.TConsistency)(ptr.Consistency),
+		TargetReplicaId:    ptr.TargetReplicaId,
+		FilterBytes:        ptr.FilterBytes,
 	}
 }
 
@@ -260,46 +389,81 @@ type RowMutations struct {
 	Mutations []*Mutation `thrift:"mutations,2,required" db:"mutations" json:"mutations"`
 }
 
-// todo
-func (t *RowMutations) toThrift2() *thrift2.TRowMutations {
+func toThrift2TRowMutations(ptr *RowMutations) *thrift2.TRowMutations {
 	return &thrift2.TRowMutations{
-		Row:       t.Row,
-		Mutations: nil,
+		Row:       ptr.Row,
+		Mutations: toThrift2MutationList(ptr.Mutations),
 	}
 }
 
 type Mutation struct {
-	Put          *Put    `thrift:"put,1" db:"put" json:"put,omitempty"`
-	DeleteSingle *Delete `thrift:"deleteSingle,2" db:"deleteSingle" json:"deleteSingle,omitempty"`
+	Put          *Put
+	DeleteSingle *Delete
 }
 
-// todo
-func (t *Mutation) toThrift2() *thrift2.TMutation {
+func toThrift2TMutation(ptr *Mutation) *thrift2.TMutation {
 	return &thrift2.TMutation{
-		Put:          nil,
-		DeleteSingle: nil,
+		Put:          toThrift2TPut(ptr.Put),
+		DeleteSingle: toThrift2TDelete(ptr.DeleteSingle),
 	}
 }
 
-type THRegionLocation struct {
-	ServerName *ServerName  `thrift:"serverName,1,required" db:"serverName" json:"serverName"`
-	RegionInfo *HRegionInfo `thrift:"regionInfo,2,required" db:"regionInfo" json:"regionInfo"`
+type HRegionLocation struct {
+	ServerName *ServerName
+	RegionInfo *HRegionInfo
+}
+
+func fromThrift2RegionLocation(ptr *thrift2.THRegionLocation) *HRegionLocation {
+	if ptr == nil {
+		return nil
+	}
+	return &HRegionLocation{
+		ServerName: fromThrift2TServerName(ptr.ServerName),
+		RegionInfo: fromThrift2HRegionInfo(ptr.RegionInfo),
+	}
 }
 
 type ServerName struct {
-	HostName  string `thrift:"hostName,1,required" db:"hostName" json:"hostName"`
-	Port      *int32 `thrift:"port,2" db:"port" json:"port,omitempty"`
-	StartCode *int64 `thrift:"startCode,3" db:"startCode" json:"startCode,omitempty"`
+	HostName  string
+	Port      *int32
+	StartCode *int64
+}
+
+func fromThrift2TServerName(ptr *thrift2.TServerName) *ServerName {
+	if ptr == nil {
+		return nil
+	}
+	return &ServerName{
+		HostName:  ptr.HostName,
+		Port:      ptr.Port,
+		StartCode: ptr.StartCode,
+	}
 }
 
 type HRegionInfo struct {
-	RegionId  int64  `thrift:"regionId,1,required" db:"regionId" json:"regionId"`
-	TableName []byte `thrift:"tableName,2,required" db:"tableName" json:"tableName"`
-	StartKey  []byte `thrift:"startKey,3" db:"startKey" json:"startKey,omitempty"`
-	EndKey    []byte `thrift:"endKey,4" db:"endKey" json:"endKey,omitempty"`
-	Offline   *bool  `thrift:"offline,5" db:"offline" json:"offline,omitempty"`
-	Split     *bool  `thrift:"split,6" db:"split" json:"split,omitempty"`
-	ReplicaId *int32 `thrift:"replicaId,7" db:"replicaId" json:"replicaId,omitempty"`
+	RegionId  int64
+	TableName []byte
+	StartKey  []byte
+	EndKey    []byte
+	Offline   *bool
+	Split     *bool
+	ReplicaId *int32
+}
+
+func fromThrift2HRegionInfo(ptr *thrift2.THRegionInfo) *HRegionInfo {
+	if ptr == nil {
+		return nil
+	}
+
+	return &HRegionInfo{
+		RegionId:  ptr.RegionId,
+		TableName: ptr.TableName,
+		StartKey:  ptr.StartKey,
+		EndKey:    ptr.EndKey,
+		Offline:   ptr.Offline,
+		Split:     ptr.Split,
+		ReplicaId: ptr.ReplicaId,
+	}
 }
 
 type TCompareOp int64
@@ -319,10 +483,23 @@ type TableName struct {
 	Qualifier []byte `thrift:"qualifier,2,required" db:"qualifier" json:"qualifier"`
 }
 
-func (t *TableName) toThrift2() *thrift2.TTableName {
+func toThrift2TTableName(ptr *TableName) *thrift2.TTableName {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TTableName{
-		Ns:        t.Ns,
-		Qualifier: t.Qualifier,
+		Ns:        ptr.Ns,
+		Qualifier: ptr.Qualifier,
+	}
+}
+
+func fromThrift2TableName(ptr *thrift2.TTableName) *TableName {
+	if ptr == nil {
+		return nil
+	}
+	return &TableName{
+		Ns:        ptr.Ns,
+		Qualifier: ptr.Qualifier,
 	}
 }
 
@@ -333,62 +510,106 @@ type TableDescriptor struct {
 	Durability *TDurability              `thrift:"durability,4" db:"durability" json:"durability,omitempty"`
 }
 
-//todo
-func (t *TableDescriptor) toThrift2() *thrift2.TTableDescriptor {
+func toThrift2TTableDescriptor(ptr *TableDescriptor) *thrift2.TTableDescriptor {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TTableDescriptor{
-		TableName:  t.TableName.toThrift2(),
-		Columns:    nil,
-		Attributes: t.Attributes,
+		TableName:  toThrift2TTableName(ptr.TableName),
+		Columns:    toThrift2ColumnFamilyDescriptorList(ptr.Columns),
+		Attributes: ptr.Attributes,
+		Durability: (*thrift2.TDurability)(ptr.Durability),
+	}
+}
+
+func fromThrift2TableDescriptor(ptr *thrift2.TTableDescriptor) *TableDescriptor {
+	if ptr == nil {
+		return nil
+	}
+	return &TableDescriptor{
+		TableName:  fromThrift2TableName(ptr.TableName),
+		Columns:    fromThrift2ColumnFamilyDescriptorList(ptr.Columns),
+		Attributes: nil,
 		Durability: nil,
 	}
 }
 
 type ColumnFamilyDescriptor struct {
-	Name                []byte                 `thrift:"name,1,required" db:"name" json:"name"`
-	Attributes          map[string][]byte      `thrift:"attributes,2" db:"attributes" json:"attributes,omitempty"`
-	Configuration       map[string]string      `thrift:"configuration,3" db:"configuration" json:"configuration,omitempty"`
-	BlockSize           *int32                 `thrift:"blockSize,4" db:"blockSize" json:"blockSize,omitempty"`
-	BloomnFilterType    *TBloomFilterType      `thrift:"bloomnFilterType,5" db:"bloomnFilterType" json:"bloomnFilterType,omitempty"`
-	CompressionType     *TCompressionAlgorithm `thrift:"compressionType,6" db:"compressionType" json:"compressionType,omitempty"`
-	DfsReplication      *int16                 `thrift:"dfsReplication,7" db:"dfsReplication" json:"dfsReplication,omitempty"`
-	DataBlockEncoding   *TDataBlockEncoding    `thrift:"dataBlockEncoding,8" db:"dataBlockEncoding" json:"dataBlockEncoding,omitempty"`
-	KeepDeletedCells    *TKeepDeletedCells     `thrift:"keepDeletedCells,9" db:"keepDeletedCells" json:"keepDeletedCells,omitempty"`
-	MaxVersions         *int32                 `thrift:"maxVersions,10" db:"maxVersions" json:"maxVersions,omitempty"`
-	MinVersions         *int32                 `thrift:"minVersions,11" db:"minVersions" json:"minVersions,omitempty"`
-	Scope               *int32                 `thrift:"scope,12" db:"scope" json:"scope,omitempty"`
-	TimeToLive          *int32                 `thrift:"timeToLive,13" db:"timeToLive" json:"timeToLive,omitempty"`
-	BlockCacheEnabled   *bool                  `thrift:"blockCacheEnabled,14" db:"blockCacheEnabled" json:"blockCacheEnabled,omitempty"`
-	CacheBloomsOnWrite  *bool                  `thrift:"cacheBloomsOnWrite,15" db:"cacheBloomsOnWrite" json:"cacheBloomsOnWrite,omitempty"`
-	CacheDataOnWrite    *bool                  `thrift:"cacheDataOnWrite,16" db:"cacheDataOnWrite" json:"cacheDataOnWrite,omitempty"`
-	CacheIndexesOnWrite *bool                  `thrift:"cacheIndexesOnWrite,17" db:"cacheIndexesOnWrite" json:"cacheIndexesOnWrite,omitempty"`
-	CompressTags        *bool                  `thrift:"compressTags,18" db:"compressTags" json:"compressTags,omitempty"`
-	EvictBlocksOnClose  *bool                  `thrift:"evictBlocksOnClose,19" db:"evictBlocksOnClose" json:"evictBlocksOnClose,omitempty"`
-	InMemory            *bool                  `thrift:"inMemory,20" db:"inMemory" json:"inMemory,omitempty"`
+	Name                []byte
+	Attributes          map[string][]byte
+	Configuration       map[string]string
+	BlockSize           *int32
+	BloomnFilterType    *TBloomFilterType
+	CompressionType     *TCompressionAlgorithm
+	DfsReplication      *int16
+	DataBlockEncoding   *TDataBlockEncoding
+	KeepDeletedCells    *TKeepDeletedCells
+	MaxVersions         *int32
+	MinVersions         *int32
+	Scope               *int32
+	TimeToLive          *int32
+	BlockCacheEnabled   *bool
+	CacheBloomsOnWrite  *bool
+	CacheDataOnWrite    *bool
+	CacheIndexesOnWrite *bool
+	CompressTags        *bool
+	EvictBlocksOnClose  *bool
+	InMemory            *bool
 }
 
-//todo
-func (t *ColumnFamilyDescriptor) toThrift2() *thrift2.TColumnFamilyDescriptor {
+func toThrift2TColumnFamilyDescriptor(ptr *ColumnFamilyDescriptor) *thrift2.TColumnFamilyDescriptor {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TColumnFamilyDescriptor{
-		Name:                t.Name,
-		Attributes:          t.Attributes,
-		Configuration:       t.Configuration,
-		BlockSize:           t.BlockSize,
-		BloomnFilterType:    nil,
-		CompressionType:     nil,
-		DfsReplication:      t.DfsReplication,
-		DataBlockEncoding:   nil,
-		KeepDeletedCells:    nil,
-		MaxVersions:         t.MaxVersions,
-		MinVersions:         t.MinVersions,
-		Scope:               t.Scope,
-		TimeToLive:          t.TimeToLive,
-		BlockCacheEnabled:   t.BlockCacheEnabled,
-		CacheBloomsOnWrite:  t.CacheBloomsOnWrite,
-		CacheDataOnWrite:    t.CacheDataOnWrite,
-		CacheIndexesOnWrite: t.CacheIndexesOnWrite,
-		CompressTags:        t.CompressTags,
-		EvictBlocksOnClose:  t.EvictBlocksOnClose,
-		InMemory:            t.InMemory,
+		Name:                ptr.Name,
+		Attributes:          ptr.Attributes,
+		Configuration:       ptr.Configuration,
+		BlockSize:           ptr.BlockSize,
+		BloomnFilterType:    (*thrift2.TBloomFilterType)(ptr.BloomnFilterType),
+		CompressionType:     (*thrift2.TCompressionAlgorithm)(ptr.CompressionType),
+		DfsReplication:      ptr.DfsReplication,
+		DataBlockEncoding:   (*thrift2.TDataBlockEncoding)(ptr.DataBlockEncoding),
+		KeepDeletedCells:    (*thrift2.TKeepDeletedCells)(ptr.KeepDeletedCells),
+		MaxVersions:         ptr.MaxVersions,
+		MinVersions:         ptr.MinVersions,
+		Scope:               ptr.Scope,
+		TimeToLive:          ptr.TimeToLive,
+		BlockCacheEnabled:   ptr.BlockCacheEnabled,
+		CacheBloomsOnWrite:  ptr.CacheBloomsOnWrite,
+		CacheDataOnWrite:    ptr.CacheDataOnWrite,
+		CacheIndexesOnWrite: ptr.CacheIndexesOnWrite,
+		CompressTags:        ptr.CompressTags,
+		EvictBlocksOnClose:  ptr.EvictBlocksOnClose,
+		InMemory:            ptr.InMemory,
+	}
+}
+
+func fromThrift2ColumnFamilyDescriptor(ptr *thrift2.TColumnFamilyDescriptor) *ColumnFamilyDescriptor {
+	if ptr == nil {
+		return nil
+	}
+	return &ColumnFamilyDescriptor{
+		Name:                ptr.Name,
+		Attributes:          ptr.Attributes,
+		Configuration:       ptr.Configuration,
+		BlockSize:           ptr.BlockSize,
+		BloomnFilterType:    (*TBloomFilterType)(ptr.BloomnFilterType),
+		CompressionType:     (*TCompressionAlgorithm)(ptr.CompressionType),
+		DfsReplication:      ptr.DfsReplication,
+		DataBlockEncoding:   (*TDataBlockEncoding)(ptr.DataBlockEncoding),
+		KeepDeletedCells:    (*TKeepDeletedCells)(ptr.KeepDeletedCells),
+		MaxVersions:         ptr.MaxVersions,
+		MinVersions:         ptr.MinVersions,
+		Scope:               ptr.Scope,
+		TimeToLive:          ptr.TimeToLive,
+		BlockCacheEnabled:   ptr.BlockCacheEnabled,
+		CacheBloomsOnWrite:  ptr.CacheBloomsOnWrite,
+		CacheDataOnWrite:    ptr.CacheDataOnWrite,
+		CacheIndexesOnWrite: ptr.CacheIndexesOnWrite,
+		CompressTags:        ptr.CompressTags,
+		EvictBlocksOnClose:  ptr.EvictBlocksOnClose,
+		InMemory:            ptr.InMemory,
 	}
 }
 
@@ -452,9 +673,22 @@ type NamespaceDescriptor struct {
 	Configuration map[string]string `thrift:"configuration,2" db:"configuration" json:"configuration,omitempty"`
 }
 
-func (t *NamespaceDescriptor) toThrift2() *thrift2.TNamespaceDescriptor {
+func toThrift2TNamespaceDescriptor(ptr *NamespaceDescriptor) *thrift2.TNamespaceDescriptor {
+	if ptr == nil {
+		return nil
+	}
 	return &thrift2.TNamespaceDescriptor{
-		Name:          t.Name,
-		Configuration: t.Configuration,
+		Name:          ptr.Name,
+		Configuration: ptr.Configuration,
+	}
+}
+
+func fromThrift2TNamespaceDescriptor(ptr *thrift2.TNamespaceDescriptor) *NamespaceDescriptor {
+	if ptr == nil {
+		return nil
+	}
+	return &NamespaceDescriptor{
+		Name:          ptr.Name,
+		Configuration: ptr.Configuration,
 	}
 }
