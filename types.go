@@ -59,7 +59,7 @@ type TimeRange struct {
 	MaxStamp int64
 }
 
-func (t *TimeRange) TransThrift2() *thrift2.TTimeRange {
+func (t *TimeRange) toThrift2() *thrift2.TTimeRange {
 	return &thrift2.TTimeRange{
 		MinStamp: t.MinStamp,
 		MaxStamp: t.MaxStamp,
@@ -70,7 +70,7 @@ type Authorization struct {
 	Labels []string
 }
 
-func (t *Authorization) TransThrift2() *thrift2.TAuthorization {
+func (t *Authorization) toThrift2() *thrift2.TAuthorization {
 	return &thrift2.TAuthorization{Labels: t.Labels}
 }
 
@@ -83,6 +83,15 @@ type Result struct {
 	Partial      bool
 }
 
+func (t *Result) toThrift2() *thrift2.TResult {
+	return &thrift2.TResult{
+		Row:          t.Row,
+		ColumnValues: toThrift2ColumnValueList(t.ColumnValues),
+		Stale:        t.Stale,
+		Partial:      t.Partial,
+	}
+}
+
 type ColumnValue struct {
 	Family    []byte
 	Qualifier []byte
@@ -90,6 +99,17 @@ type ColumnValue struct {
 	Timestamp *int64
 	Tags      []byte
 	Type      *int8
+}
+
+func (t *ColumnValue) toThrift2() *thrift2.TColumnValue {
+	return &thrift2.TColumnValue{
+		Family:    t.Family,
+		Qualifier: t.Qualifier,
+		Value:     t.Value,
+		Timestamp: t.Timestamp,
+		Tags:      t.Tags,
+		Type:      t.Type,
+	}
 }
 
 type Put struct {
@@ -102,7 +122,26 @@ type Put struct {
 	CellVisibility *CellVisibility
 }
 
+func (t *Put) toThrift2() *thrift2.TPut {
+	return &thrift2.TPut{
+		Row:            t.Row,
+		ColumnValues:   toThrift2ColumnValueList(t.ColumnValues),
+		Timestamp:      t.Timestamp,
+		Attributes:     t.Attributes,
+		Durability:     toThrift2TDurability(t.Durability),
+		CellVisibility: nil,
+	}
+}
+
 type TDurability int64
+
+func toThrift2TDurability(v *TDurability) *thrift2.TDurability {
+	if v == nil {
+		return nil
+	}
+	r := thrift2.TDurability(*v)
+	return &r
+}
 
 const (
 	UseDefault TDurability = 0
@@ -114,6 +153,10 @@ const (
 
 type CellVisibility struct {
 	Expression *string
+}
+
+func toThrift() {
+
 }
 
 type Delete struct {
@@ -181,7 +224,7 @@ type Scan struct {
 }
 
 // todo
-func (t *Scan) TransThrift2() *thrift2.TScan {
+func (t *Scan) toThrift2() *thrift2.TScan {
 	return &thrift2.TScan{
 		StartRow:           t.StartRow,
 		StopRow:            t.StopRow,
@@ -218,7 +261,7 @@ type RowMutations struct {
 }
 
 // todo
-func (t *RowMutations) TransThrift2() *thrift2.TRowMutations {
+func (t *RowMutations) toThrift2() *thrift2.TRowMutations {
 	return &thrift2.TRowMutations{
 		Row:       t.Row,
 		Mutations: nil,
@@ -231,7 +274,7 @@ type Mutation struct {
 }
 
 // todo
-func (t *Mutation) TransThrift2() *thrift2.TMutation {
+func (t *Mutation) toThrift2() *thrift2.TMutation {
 	return &thrift2.TMutation{
 		Put:          nil,
 		DeleteSingle: nil,
@@ -276,7 +319,7 @@ type TableName struct {
 	Qualifier []byte `thrift:"qualifier,2,required" db:"qualifier" json:"qualifier"`
 }
 
-func (t *TableName) TransThrift2() *thrift2.TTableName {
+func (t *TableName) toThrift2() *thrift2.TTableName {
 	return &thrift2.TTableName{
 		Ns:        t.Ns,
 		Qualifier: t.Qualifier,
@@ -291,9 +334,9 @@ type TableDescriptor struct {
 }
 
 //todo
-func (t *TableDescriptor) TransThrift2() *thrift2.TTableDescriptor {
+func (t *TableDescriptor) toThrift2() *thrift2.TTableDescriptor {
 	return &thrift2.TTableDescriptor{
-		TableName:  t.TableName.TransThrift2(),
+		TableName:  t.TableName.toThrift2(),
 		Columns:    nil,
 		Attributes: t.Attributes,
 		Durability: nil,
@@ -324,7 +367,7 @@ type ColumnFamilyDescriptor struct {
 }
 
 //todo
-func (t *ColumnFamilyDescriptor) TransThrift2() *thrift2.TColumnFamilyDescriptor {
+func (t *ColumnFamilyDescriptor) toThrift2() *thrift2.TColumnFamilyDescriptor {
 	return &thrift2.TColumnFamilyDescriptor{
 		Name:                t.Name,
 		Attributes:          t.Attributes,
@@ -372,6 +415,14 @@ const (
 
 type TDataBlockEncoding int64
 
+func Thrift2TDataBlockEncoding(v *TDataBlockEncoding) *thrift2.TDataBlockEncoding {
+	if v == nil {
+		return nil
+	}
+	r := thrift2.TDataBlockEncoding(*v)
+	return &r
+}
+
 const (
 	TDataBlockEncoding_NONE         TDataBlockEncoding = 0
 	TDataBlockEncoding_PREFIX       TDataBlockEncoding = 2
@@ -381,6 +432,14 @@ const (
 )
 
 type TKeepDeletedCells int64
+
+func Thrift2TKeepDeletedCells(v *TKeepDeletedCells) *thrift2.TKeepDeletedCells {
+	if v == nil {
+		return nil
+	}
+	r := thrift2.TKeepDeletedCells(*v)
+	return &r
+}
 
 const (
 	TKeepDeletedCells_FALSE TKeepDeletedCells = 0
@@ -393,7 +452,7 @@ type NamespaceDescriptor struct {
 	Configuration map[string]string `thrift:"configuration,2" db:"configuration" json:"configuration,omitempty"`
 }
 
-func (t *NamespaceDescriptor) TransThrift2() *thrift2.TNamespaceDescriptor {
+func (t *NamespaceDescriptor) toThrift2() *thrift2.TNamespaceDescriptor {
 	return &thrift2.TNamespaceDescriptor{
 		Name:          t.Name,
 		Configuration: t.Configuration,
