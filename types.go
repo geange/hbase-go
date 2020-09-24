@@ -3,21 +3,21 @@ package hbase
 import thrift2 "github.com/geange/hbase-go/thrift/v2"
 
 type Get struct {
-	Row             []byte            `thrift:"row,1,required" db:"row" json:"row"`
-	Columns         []*Column         `thrift:"columns,2" db:"columns" json:"columns,omitempty"`
-	Timestamp       *int64            `thrift:"timestamp,3" db:"timestamp" json:"timestamp,omitempty"`
-	TimeRange       *TimeRange        `thrift:"timeRange,4" db:"timeRange" json:"timeRange,omitempty"`
-	MaxVersions     *int32            `thrift:"maxVersions,5" db:"maxVersions" json:"maxVersions,omitempty"`
-	FilterString    []byte            `thrift:"filterString,6" db:"filterString" json:"filterString,omitempty"`
-	Attributes      map[string][]byte `thrift:"attributes,7" db:"attributes" json:"attributes,omitempty"`
-	Authorizations  *Authorization    `thrift:"authorizations,8" db:"authorizations" json:"authorizations,omitempty"`
-	Consistency     *TConsistency     `thrift:"consistency,9" db:"consistency" json:"consistency,omitempty"`
-	TargetReplicaId *int32            `thrift:"targetReplicaId,10" db:"targetReplicaId" json:"targetReplicaId,omitempty"`
-	CacheBlocks     *bool             `thrift:"cacheBlocks,11" db:"cacheBlocks" json:"cacheBlocks,omitempty"`
-	StoreLimit      *int32            `thrift:"storeLimit,12" db:"storeLimit" json:"storeLimit,omitempty"`
-	StoreOffset     *int32            `thrift:"storeOffset,13" db:"storeOffset" json:"storeOffset,omitempty"`
-	ExistenceOnly   *bool             `thrift:"existence_only,14" db:"existence_only" json:"existence_only,omitempty"`
-	FilterBytes     []byte            `thrift:"filterBytes,15" db:"filterBytes" json:"filterBytes,omitempty"`
+	Row             []byte
+	Columns         []*Column
+	Timestamp       *int64
+	TimeRange       *TimeRange
+	MaxVersions     *int32
+	FilterString    []byte
+	Attributes      map[string][]byte
+	Authorizations  *Authorization
+	Consistency     *TConsistency
+	TargetReplicaId *int32
+	CacheBlocks     *bool
+	StoreLimit      *int32
+	StoreOffset     *int32
+	ExistenceOnly   *bool
+	FilterBytes     []byte
 }
 
 func toThrift2TGet(ptr *Get) *thrift2.TGet {

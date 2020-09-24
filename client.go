@@ -12,12 +12,14 @@ var (
 
 type client struct {
 	version       int
+	thrift1Client Thrift1Client
 	thrift2Client Thrift2Client
 }
 
 func (c *client) Exists(ctx context.Context, table []byte, get *Get) (r bool, err error) {
 	switch c.version {
 	case Thrift:
+
 	case Thrift2:
 		return c.thrift2Client.Exists(ctx, table, toThrift2TGet(get))
 	}

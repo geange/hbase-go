@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type ThriftClient interface {
+type Thrift1Client interface {
 	Open() error
 	IsOpen() bool
 	Close() error
@@ -471,7 +471,7 @@ func (c *rawClientV1) Close() error {
 	return c.transport.Close()
 }
 
-func NewRawClientV1(ctx context.Context, option RawClientOption) (rc ThriftClient, err error) {
+func NewRawClientV1(ctx context.Context, option RawClientOption) (rc Thrift1Client, err error) {
 	hostPort := net.JoinHostPort(option.Host, strconv.Itoa(option.Port))
 
 	var socket *thrift.TSocket
